@@ -1,4 +1,5 @@
 from django.http import *
+from util import *
 
 def move(request):
     try:
@@ -6,6 +7,10 @@ def move(request):
         pos_y = request.GET['y']
         res = "var x = " + pos_x + "; var y= " + pos_y + ";"
     except:
-        res = 'Error'
-        
+        res = 'error'
+
     return HttpResponse(res)
+    
+@render_to('eoa/base.html')
+def index(request):
+    return {}

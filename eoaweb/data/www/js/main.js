@@ -145,10 +145,13 @@ function move_entity(element, dir, amount){
     
     /*Make the request to the server*/
     var req = new Request({
-        url: 'test.txt',
+        url: '/move/?dir=up',
+        method: 'GET',
         onSuccess: function(res){
-            var entity_position = parseInt($(element).getStyle(css_direction))
-            $(element).setStyle(css_direction, entity_position + amount + 'px')
+            if (res != 'error'){
+                var entity_position = parseInt($(element).getStyle(css_direction))
+                $(element).setStyle(css_direction, entity_position + amount + 'px')
+            }
             
         }
     }).send();

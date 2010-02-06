@@ -13,7 +13,7 @@ body, html {
     width:250px;
 }
 #zone_container {
-    background:url(images/zones/hneoa.png);
+    background:url(/static/images/zones/hneoa.png);
     height:800px;
     left:0;
     position:absolute;
