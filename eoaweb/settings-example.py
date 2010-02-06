@@ -18,7 +18,7 @@ DATABASE_PORT = ''             # Set to empty string for default. Not used with 
 
 """Set up paths"""
 import os
-EOA_PATH = '/home/erik/Code/EoAWeb1'
+EOA_PATH = 'C:\wamp\www\EoAWeb1'
 ROOT_PATH = os.path.join(EOA_PATH, 'eoaweb')
 
 # Local time zone for this installation. Choices can be found here:
