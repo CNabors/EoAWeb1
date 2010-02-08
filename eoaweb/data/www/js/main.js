@@ -1,3 +1,56 @@
+/*=============================================================================
+
+  On DOMReady Events
+
+=============================================================================*/
+window.addEvent('domready', function(){
+    /*Attach events to elements*/
+
+    /*Game elements*/
+    $('move_character_button').addEvent('click', function(){
+        move_entity($('character'), 'right', -10);
+    });
+
+    /*Site Specific (Non game) elements*/
+    if($('login_submit')){
+        //If a login_submit element exists on the page (it may not if the user
+        //  is already logged in
+        
+        $('login_submit').addEvent('click', function(){
+            /*Make a request to the login page*/
+            var req = new Request({
+                url: '/eoa/login/',
+                data: 'username=' + $('login_username').value + 
+                        '&password=' + $('login_password').value,
+                method: 'post',
+
+                //Correct username / pw
+                onSuccess: function(res){
+                    //Update the login wrapper to let them know they've logged in
+                    //  this should just call a function to load a new page here
+                    $('login_wrapper').innerHTML = "Logged in as " + res +
+                                "<br />" +
+                                "<a href='/eoa/logout/' title='logout'>Logout</a>"
+                    $('login_wrapper').highlight('#22aa22');
+                },
+                
+                //Wrong username / pw
+                onFailure: function(res){
+                    $('login_error_message').innerHTML = "<br />" + 
+                                                    "Invalid username or password"
+                    $('login_wrapper').highlight('#aa2222');
+                }
+            }).send();
+        })
+    };
+   
+})
+
+
+
+/*=============================================================================
+Handle Input
+=============================================================================*/
 window.addEvent('keydown', function(event){  
     /*Define our entity*/
     var element = $('character')
@@ -22,13 +75,14 @@ window.addEvent('keydown', function(event){
     
     /*Handle command keys*/
     if(event.key == "i"){
-        alert("Inventory");
-    }
-    
+        //sample command key event
+        //alert("Inventory");
+    }        
 });
 
 /*=============================================================================
-Function calls
+
+  Function calls
 
 =============================================================================*/
 function move_pc(dir, amount){
@@ -124,8 +178,9 @@ function move_entity(element, dir, amount){
         var amount = 1
     }
     else {
-        var amounnt = amount
+        var amount = amount
     }
+    amount = 5 * -1
     
     /*Set up direction information based on what is passed in*/
     if(dir == 'up'){
@@ -145,10 +200,10 @@ function move_entity(element, dir, amount){
     
     /*Make the request to the server*/
     var req = new Request({
-        url: '/move/?dir=up',
+        url: '/eoa/move/?dir=up',
         method: 'GET',
         onSuccess: function(res){
-            if (res != 'error'){
+            if (res != 'errora'){
                 var entity_position = parseInt($(element).getStyle(css_direction))
                 $(element).setStyle(css_direction, entity_position + amount + 'px')
             }
