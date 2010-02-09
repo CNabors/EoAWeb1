@@ -21,7 +21,11 @@ import os
 EOA_PATH = '/home/web/dev/EoAWeb1'
 ROOT_PATH = os.path.join(EOA_PATH, 'eoaweb')
 
+#Set Cookie age
 SESSION_COOKIE_AGE = 180000
+
+#Set default login url
+LOGIN_URL = '/login/'
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -52,7 +56,7 @@ MEDIA_URL = 'http://hermes.freac.fsu.edu/dev/eoa/static'
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = '/media/'
+ADMIN_MEDIA_PREFIX = '/eoa/media/'
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 's#v&4s42-*5ue#i8kvk+eln#&(!3^9&o0)t(_ha1eh^)%8^i#j'

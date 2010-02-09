@@ -6,18 +6,37 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    ###=======================================================================
+    ###    Base Pages
+    ###=======================================================================
     #ADMIN
     (r'^admin/', include(admin.site.urls)),
+    
+    #Index Page
+    (r'^index/', 'eoa.views.index'),
+    (r'^', 'eoa.views.index'),
 
-    #LOGIN
-    (r'^login/', 'eoa.views.login'),
-    (r'^logout/', 'eoa.views.logout'),
-    (r'^register/', 'eoa.views.register'),
+    #Login Page
+    (r'^login/', 'eoa.views.login_page'),
+    
+    ###=======================================================================
+    ###    Account Functions    
+    ###=======================================================================
+    #-------------------------------------
+    #User account functions
+    #-------------------------------------
+    (r'^account_login/', 'eoa.views.login'),
+    (r'^account_logout/', 'eoa.views.logout'),
+    (r'^account_register/', 'eoa.views.register'),
 
+    ###=======================================================================
+    ###    Game Functions    
+    ###=======================================================================
+    #-------------------------------------
+    #       Movement
+    #-------------------------------------
     (r'^move/', 'eoa.views.move'),
 
-    (r'^index/', 'eoa.views.index'),
-    (r'^/', 'eoa.views.index'),
     
 )
 

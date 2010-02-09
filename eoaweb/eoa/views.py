@@ -39,6 +39,25 @@ from eoaweb.eoa.models import *
 import operator, cgi, re, datetime, string, random
 
 
+'''========================================================================
+
+Pages
+
+==========================================================================='''
+
+@login_required
+@render_to('eoa/base.html')
+def index(request):
+    """Renders the index page if user is logged in, game lives here"""
+    if request.user is None:
+        HttpResponseRedirect('/eoa/login')
+    return {'account_name':request.user.username}
+
+@render_to('eoa/login.html')
+def login_page(request):
+    """Renders the Login page"""
+
+    return {}
 
 
 '''========================================================================
@@ -47,16 +66,28 @@ Functions
 
 ==========================================================================='''
 def move(request):
-    try:
-        dir = cgi.escape(request.POST['dir'])
-    except:
-        res = 'error'
+    #Get the direction
+    dir = cgi.escape(request.POST['dir'])
+    
+    #Get the character associated with the user
+    char = Character.objects.get(account=request.user)
+    
+    #Update the stored position
+    if dir == 'up':
+        char.pos_y += 1
+    elif dir == 'down':
+        char.pos_y -= 1
+    elif dir == 'right':
+        char.pos_x += 1
+    elif dir == 'left':
+        char.pos_x -= 1
+
+    #Save the character position
+    char.save()
+
+    res = 'Success'
 
     return HttpResponse(res)
- 
-@render_to('eoa/base.html')
-def index(request):
-    return {'account_name':request.user.username}
 
 
 '''----------------------
@@ -73,7 +104,16 @@ def login(request):
     if user is not None:
         django_login(request, user)
 
-    return HttpResponse(user.email)
+    #Create an empty response string
+    res = ''
+
+    #Get the character's color and set it in the response
+    char = Character.objects.get(account=user)
+    char_color = char.color
+
+    res = "$('character').setStyle('background', '#%s');" % (char_color)
+
+    return HttpResponse(res)
 
 def logout(request):
     """Logouts the user by calling django's biult in logout function"""
