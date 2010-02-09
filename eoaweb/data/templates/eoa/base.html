@@ -26,6 +26,19 @@
             <input type='button' value='Login' id='login_submit' />
             <div id='login_error_message'></div>
         </div>
+        
+        <br /><br />
+        <div id='register_wrapper'>
+            <label for='register_username'>Username</label><input type='text' value='' name='username' id='register_username' />
+            <br />
+            <label for='register_email'>E-Mail</label><input type='text' value='' name='email' id='register_email' />
+            <br />
+            <label for='register_password'>Password</label><input type='text' value='' name='password' id='register_password' />
+            <br />
+            <label for='register_color'>Character Color</label><input type='text' value='' name='color' id='register_color' />
+            <input type='button' value='Register' id='register_submit' />
+            <div id='register_error_message'></div>
+        </div>
     {% else %}
         <div id='login_wrapper'>
             Logged in as {{ account_name }}

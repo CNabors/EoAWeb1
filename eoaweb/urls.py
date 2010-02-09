@@ -16,6 +16,7 @@ urlpatterns = patterns('',
 
     (r'^eoa/move/', 'eoa.views.move'),
     (r'^eoa/index/', 'eoa.views.index'),
+    (r'^eoa/', 'eoa.views.index'),
     
 )
 

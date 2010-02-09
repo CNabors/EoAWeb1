@@ -6,5 +6,7 @@ class Character(models.Model):
     
     pos_x = models.IntegerField(default=0)
     pos_y = models.IntegerField(default=0)
+
+    color = models.CharField(max_length=6, default="000000")
     
     account = models.ForeignKey(User)

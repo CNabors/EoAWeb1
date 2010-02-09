@@ -11,7 +11,11 @@ window.addEvent('domready', function(){
         move_entity($('character'), 'right', -10);
     });
 
-    /*Site Specific (Non game) elements*/
+    /* ===================================
+     * Site Specific (Non game) elements
+     * ===================================*/
+
+    //Login Submit Button
     if($('login_submit')){
         //If a login_submit element exists on the page (it may not if the user
         //  is already logged in
@@ -32,6 +36,7 @@ window.addEvent('domready', function(){
                                 "<br />" +
                                 "<a href='/eoa/logout/' title='logout'>Logout</a>"
                     $('login_wrapper').highlight('#22aa22');
+                    $('register_wrapper').fade(0)
                 },
                 
                 //Wrong username / pw
@@ -39,6 +44,38 @@ window.addEvent('domready', function(){
                     $('login_error_message').innerHTML = "<br />" + 
                                                     "Invalid username or password"
                     $('login_wrapper').highlight('#aa2222');
+                }
+            }).send();
+        })
+    };
+
+    //Register Submit Button
+    if($('register_submit')){
+        $('register_submit').addEvent('click', function(){
+            /*Make a request to the login page*/
+            var req = new Request({
+                url: '/eoa/register/',
+                data: 'username=' + $('register_username').value + 
+                        '&email=' + $('register_email').value + 
+                        '&color=' + $('register_color').value + 
+                        '&password=' + $('register_password').value,
+                method: 'post',
+
+                //Correct username / pw
+                onSuccess: function(res){
+                    //Update the login wrapper to let them know they've logged in
+                    //  this should just call a function to load a new page here
+                    $('register_wrapper').innerHTML = "Account created! " + res +
+                                "<br />" +
+                                "<a href='/eoa/logout/' title='logout'>Logout</a>"
+                    $('register_wrapper').highlight('#22aa22');
+                },
+                
+                //Wrong username / pw
+                onFailure: function(res){
+                    $('register_error_message').innerHTML = "<br />" + 
+                                                    "Username already exists"
+                    $('register_wrapper').highlight('#aa2222');
                 }
             }).send();
         })
@@ -200,10 +237,11 @@ function move_entity(element, dir, amount){
     
     /*Make the request to the server*/
     var req = new Request({
-        url: '/eoa/move/?dir=up',
-        method: 'GET',
+        url: '/eoa/move/',
+        data: 'dir=' + dir
+        method: 'post',
         onSuccess: function(res){
-            if (res != 'errora'){
+            if (res != 'error'){
                 var entity_position = parseInt($(element).getStyle(css_direction))
                 $(element).setStyle(css_direction, entity_position + amount + 'px')
             }

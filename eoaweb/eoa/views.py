@@ -48,9 +48,7 @@ Functions
 ==========================================================================='''
 def move(request):
     try:
-        pos_x = request.GET['x']
-        pos_y = request.GET['y']
-        res = 'var x = ' + pos_x + '; var y= ' + pos_y + ';'
+        dir = cgi.escape(request.POST['dir'])
     except:
         res = 'error'
 
@@ -87,16 +85,20 @@ def logout(request):
 def register(request):
     """Register a user account"""
 
+    username = cgi.escape(request.POST['username'])
+    email = cgi.escape(request.POST['email'])
+    password = cgi.escape(request.POST['password'])
+    character_color = cgi.escape(request.POST['color'])
+
     res = 'Account created successfully!'
     
-    try:
-        new_user = User.objects.create_user('test','test@test.com','password')
-        new_user.save()
-    except: 
-        res = 'Registration failed'
+    #creates a user
+    new_user = User.objects.create_user(username, email, password) 
+    new_user.save()
 
-
-    #new_user = User.objects.get(username='test')
-    #new_user.delete()
+    #creates a character
+    new_character = Character(name=username, pos_x=0, pos_y=0, 
+                        color=character_color, account=new_user)
+    new_character.save()
 
     return HttpResponse(res)
