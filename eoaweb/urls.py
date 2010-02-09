@@ -14,7 +14,6 @@ urlpatterns = patterns('',
     
     #Index Page
     (r'^index/', 'eoa.views.index'),
-    (r'^', 'eoa.views.index'),
 
     #Login Page
     (r'^login/', 'eoa.views.login_page'),

@@ -25,7 +25,7 @@ ROOT_PATH = os.path.join(EOA_PATH, 'eoaweb')
 SESSION_COOKIE_AGE = 180000
 
 #Set default login url
-LOGIN_URL = '/login/'
+LOGIN_URL = '/eoa/login/'
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
