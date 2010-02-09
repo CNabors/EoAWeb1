@@ -7,16 +7,15 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     #ADMIN
-    (r'^eoa/admin/', include(admin.site.urls)),
+    (r'^admin/', include(admin.site.urls)),
 
     #LOGIN
-    (r'^eoa/login/', 'eoa.views.login'),
-    (r'^eoa/logout/', 'eoa.views.logout'),
-    (r'^eoa/register/', 'eoa.views.register'),
+    (r'^login/', 'eoa.views.login'),
+    (r'^logout/', 'eoa.views.logout'),
+    (r'^register/', 'eoa.views.register'),
 
-    (r'^eoa/move/', 'eoa.views.move'),
-    (r'^eoa/index/', 'eoa.views.index'),
-    (r'^eoa/', 'eoa.views.index'),
+    (r'^move/', 'eoa.views.move'),
+    (r'^index/', 'eoa.views.index'),
     
 )
 
