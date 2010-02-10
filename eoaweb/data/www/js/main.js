@@ -34,8 +34,8 @@ window.addEvent('domready', function(){
     var heart_beat = new Request({
         url: '/eoa/heartbeat/',
         initialDelay: 1000,
-        delay:200,
-        limit:400,
+        delay:100,
+        limit:300,
         onSuccess: function(res){
             //Evaluate the response to generate JS objects
             eval(res);
