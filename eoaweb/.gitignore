@@ -2,4 +2,6 @@
 *.swp
 *.*.swp
 *.pyc
+*/*.pyc
+*/*.swp
 settings.py
