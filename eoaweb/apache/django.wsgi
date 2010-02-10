@@ -1,7 +1,7 @@
 import os
 import sys
-sys.path.append('/home/erik/Code/EoAWeb1')
-sys.path.append('/home/erik/Code/EoAWeb1/eoaweb')
+sys.path.append('/home/web/dev/EoAWeb1')
+sys.path.append('/home/web/dev/EoAWeb1/eoaweb')
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'eoaweb.settings'
 
