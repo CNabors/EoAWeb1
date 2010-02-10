@@ -6,12 +6,10 @@
     /* ===================================
      * Login elements
      * ===================================*/
+window.addEvent('domready', function(){
 
     //Login Submit Button
     if($('login_submit')){
-        //If a login_submit element exists on the page (it may not if the user
-        //  is already logged in
-        
         $('login_submit').addEvent('click', function(){
             /*Make a request to the login page*/
             var req = new Request({
@@ -22,21 +20,7 @@
 
                 //Correct username / pw
                 onSuccess: function(res){
-                    //Update the login wrapper to let them know they've logged in
-                    //  this should just call a function to load a new page here
-                    $('login_wrapper').innerHTML = "Logged in as " + res +
-                                "<br />" +
-                                "<a href='/eoa/logout/' title='logout'>Logout</a>"
-                    $('login_wrapper').highlight('#22aa22');
-                    
-                    //Hide and destroy the register wrapper
-                    $('register_wrapper').fade(0)
-                    $('register_wrapper').destroy()
-
-                    //Create the character from the DB
-                    var character_element = new Element('div', {'id': 'character' });
-                    $('camera_container').adopt(character_element);
-                    eval(res);
+                    window.location = '/eoa/index/';
                 },
                 
                 //Wrong username / pw
@@ -47,7 +31,7 @@
                 }
             }).send();
         })
-    };
+    }
 
     //Register Submit Button
     if($('register_submit')){
@@ -66,9 +50,18 @@
                     //Update the login wrapper to let them know they've logged in
                     //  this should just call a function to load a new page here
                     $('register_wrapper').innerHTML = "Account created! " + res +
-                                "<br />" +
-                                "<a href='/eoa/logout/' title='logout'>Logout</a>"
+                                "<br />" + "Log in above"
                     $('register_wrapper').highlight('#22aa22');
+                    
+                    //Send a request to log the user in
+                    //This should probably be handled better ><
+                    var login_register_req = new Request({
+                        url:'/eoa/account_login/',
+                        data: 'username=' + $('register_username').value + 
+                        '&password=' + $('register_password').value,
+                        method:'post',
+                        onSuccess: function(res){window.location='/eoa/index/';}
+                    }).send();
                 },
                 
                 //Wrong username / pw
@@ -79,6 +72,5 @@
                 }
             }).send();
         })
-    };
-   
-})
+    }
+});

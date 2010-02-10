@@ -5,9 +5,60 @@
 =============================================================================*/
 window.addEvent('domready', function(){
     /*Attach events to elements*/
-    
+   
+    /* Get the logged in user's character position*/
+    var char_req = new Request({
+        url: '/eoa/get_character_info/',
+        onSuccess: function(res){
+            var character_color = ''; //Will be overwritten
+           
+            var character_element = new Element('div', {'id':'character'}); 
+            $('camera_container').adopt(character_element);
+            
+            //Create variables from response
+            eval(res);
+
+            $('character').setStyle('background', character_color);
+            $('character').setStyle('left', character_pos_x);
+            $('character').setStyle('top', character_pos_y);
+            $('character').setStyle('position', 'absolute');
+        }
+    }).send();
+
     /*Game elements*/
     //Space reserved for buttons to control character, etc
+    
+    /*================================
+     * Heartbeat requests
+     * ===============================*/
+    var heart_beat = new Request({
+        url: '/eoa/heartbeat/',
+        initialDelay: 1000,
+        delay:200,
+        limit:400,
+        onSuccess: function(res){
+            //Evaluate the response to generate JS objects
+            eval(res);
+
+            //We expect back an array of character objects, so let's update them
+            for(var i = 0; i < char_array.length; i++){
+                if($(char_array[i][0])){
+                    $(char_array[i][0]).setStyle('left', char_array[i][1]);
+                    $(char_array[i][0]).setStyle('top', char_array[i][2]);
+                }
+                else{
+                    var char_el = new Element('div', {'id':char_array[i][0]});
+                    $('camera_container').adopt(char_el);
+                    $(char_array[i][0]).setStyle('background', '#' + char_array[i][3]);
+                    $(char_array[i][0]).setStyle('position', 'relative');
+                    $(char_array[i][0]).setStyle('border', '1px solid #efefef');
+                    $(char_array[i][0]).setStyle('width', '20px');
+                    $(char_array[i][0]).setStyle('height', '20px');
+                }
+            }
+        }
+    }).startTimer();
+
 });
 
 
@@ -143,22 +194,24 @@ function move_entity(element, dir, amount){
     else {
         var amount = amount
     }
-    amount = 5 * -1
+
+    //For now set amount moved to 5
+    amount = 5
     
     /*Set up direction information based on what is passed in*/
     if(dir == 'up'){
         css_direction = 'top'
+        amount = amount * -1
     }
     else if(dir == 'right'){
         css_direction = 'left'
-        amount = amount * -1
     }
     else if(dir == 'down'){
         css_direction = 'top'
-        amount = amount * -1
     }
     else if(dir == 'left'){
         css_direction = 'left'
+        amount = amount * -1
     }
     
     /*Make the request to the server*/

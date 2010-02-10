@@ -45,13 +45,15 @@ Pages
 
 ==========================================================================='''
 
-@login_required
 @render_to('eoa/base.html')
 def index(request):
     """Renders the index page if user is logged in, game lives here"""
-    if request.user is None:
-        HttpResponseRedirect('/eoa/login')
-    return {'account_name':request.user.username}
+
+    #See if user is logged in
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('/eoa/login')
+   
+    return {}
 
 @render_to('eoa/login.html')
 def login_page(request):
@@ -65,6 +67,47 @@ def login_page(request):
 Functions
 
 ==========================================================================='''
+"""-----------------
+Information related
+--------------------"""
+
+def get_character_info(request):
+    """Returns some character information for the logged in character"""
+    
+    #Set the character's color
+    character = Character.objects.get(account=request.user)
+    character_color = character.color
+    character_pos_x = character.pos_x
+    character_pos_y = character.pos_y
+
+    #Build a javascript string with some info
+    res = "var character_color = '#" + character_color + "';"
+    res += "var character_pos_x = '" + str(character_pos_x) + "px' ;"
+    res += "var character_pos_y = '" + str(character_pos_y) + "px' ;"
+
+    return HttpResponse(res)
+
+def heartbeat(request):
+    """Returns a list of logged in users"""
+
+    characters = Character.objects.all()
+
+    res = "var char_array = [];"
+
+    for i in characters:
+        if i.name != request.user.username:
+            #Don't count characters attached to the logged in user
+            res += "char_array.push(['" + i.name + "', '" + str(i.pos_x) +\
+                            "', '" + str(i.pos_y) + "','" + i.color +\
+                            "']);\n"
+
+            
+        
+    return HttpResponse(res)   
+
+"""-----------------
+Character functions
+--------------------"""
 def move(request):
     #Get the direction
     dir = cgi.escape(request.POST['dir'])
@@ -72,24 +115,34 @@ def move(request):
     #Get the character associated with the user
     char = Character.objects.get(account=request.user)
     
+    #move_amount is how much to move the character
+    #   this should be calculated based off db (run speed of character)
+    move_amount = 5
+
     #Update the stored position
+    #Because our coordinate system starts at 0,0 in the top left, when the 
+    #   character presses up they are decreasing their position in the y dir
     if dir == 'up':
-        char.pos_y += 1
+        char.pos_y -= move_amount
     elif dir == 'down':
-        char.pos_y -= 1
+        char.pos_y += move_amount
     elif dir == 'right':
-        char.pos_x += 1
+        char.pos_x += move_amount
     elif dir == 'left':
-        char.pos_x -= 1
+        char.pos_x -= move_amount
 
     #Save the character position
     char.save()
+   
+    #Return the x or y position based on direction passed in
+    #   Used mainly for debugging
+    if dir == 'up' or dir == 'down':
+        res = "x:%s" % (char.pos_y)
 
-    res = 'Success'
+    if dir == 'left' or dir == 'right':
+        res = "x:%s" % (char.pos_x)
 
     return HttpResponse(res)
-
-
 '''----------------------
 AUTH FUNCTIONS
 -------------------------'''
@@ -103,24 +156,20 @@ def login(request):
     user = django_authenticate(username=username, password=password)
     if user is not None:
         django_login(request, user)
+        #return HttpResponseRedirect('/eoa/index')
 
     #Create an empty response string
-    res = ''
-
-    #Get the character's color and set it in the response
-    char = Character.objects.get(account=user)
-    char_color = char.color
-
-    res = "$('character').setStyle('background', '#%s');" % (char_color)
+    res = 'Success'
 
     return HttpResponse(res)
+
+
 
 def logout(request):
     """Logouts the user by calling django's biult in logout function"""
     
     django_logout(request)
-
-    return HttpResponse('Logged out')
+    return HttpResponseRedirect('/eoa/index/')
 
 def register(request):
     """Register a user account"""
@@ -128,7 +177,11 @@ def register(request):
     username = cgi.escape(request.POST['username'])
     email = cgi.escape(request.POST['email'])
     password = cgi.escape(request.POST['password'])
+
+    #Get and set the character's color
     character_color = cgi.escape(request.POST['color'])
+    character_color = character_color.replace('#','')
+    character_color = character_color[0:6]
 
     res = 'Account created successfully!'
     

@@ -14,6 +14,7 @@ urlpatterns = patterns('',
     
     #Index Page
     (r'^index/', 'eoa.views.index'),
+    (r'^/', 'eoa.views.index'),
 
     #Login Page
     (r'^login/', 'eoa.views.login_page'),
@@ -31,6 +32,12 @@ urlpatterns = patterns('',
     ###=======================================================================
     ###    Game Functions    
     ###=======================================================================
+    #-------------------------------------
+    #       Info
+    #-------------------------------------
+    (r'^get_character_info/', 'eoa.views.get_character_info'),
+    (r'^heartbeat/', 'eoa.views.heartbeat'),
+    
     #-------------------------------------
     #       Movement
     #-------------------------------------
