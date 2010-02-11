@@ -3,6 +3,10 @@
   On DOMReady Events
 
 =============================================================================*/
+//Some global variables (ehh...)
+var heartbeat;
+var chat_heartbeat;
+
 window.addEvent('domready', function(){
     /*Attach events to elements*/
    
@@ -31,7 +35,7 @@ window.addEvent('domready', function(){
     /*================================
      * Heartbeat requests
      * ===============================*/
-    var heart_beat = new Request({
+    heartbeat = new Request({
         url: '/eoa/heartbeat/',
         initialDelay: 1000,
         delay:100,
@@ -57,8 +61,73 @@ window.addEvent('domready', function(){
                 }
             }
         }
+    }).startTimer()
+
+    $('start_heartbeat').addEvent('click', function(){
+        heartbeat.startTimer();
+    });
+    $('stop_heartbeat').addEvent('click', function(){
+        heartbeat.stopTimer();
+    });
+
+
+    /*================================
+     * 
+     * Chat 
+     *
+     * ===============================*/
+    /*------------
+     * Heartbeat
+     * -----------*/
+    chat_heartbeat = new Request({
+        url: '/eoa/chat_heartbeat/',
+        initialDelay: 1000,
+        delay:500,
+        limit:700,
+        onSuccess: function(res){
+            //Evaluate the response to generate JS objects
+            eval(res);
+
+            if(chat_messages){
+                //We expect back an array of character objects, so let's update them
+                for(var i = 0; i < chat_messages.length; i++){
+                    //Update chat text
+                    var new_chat_line = new Element('div', {
+                        'class':'chat_line',
+                        'html':"<span class='chat_author' style='color:#" + 
+                                chat_messages[i][2] + "'>" +
+                                chat_messages[i][0] +
+                                "</span>: " + 
+                                chat_messages[i][1]
+                    });
+                    $('chat_incoming').adopt(new_chat_line);
+                    $('chat_incoming').scrollTo(0, parseInt($('chat_incoming').getStyle('height'))) 
+                }
+            }
+        }
     }).startTimer();
 
+    $('start_chat_heartbeat').addEvent('click', function(){
+        chat_heartbeat.startTimer();
+    });
+    $('stop_chat_heartbeat').addEvent('click', function(){
+        chat_heartbeat.stopTimer();
+    });
+
+    /*------------
+     * Chat window
+     * -----------*/
+    $('chat_submit').addEvent('click', function(){
+        var chat_message = $('chat_text').value;
+        var send_chat_req = new Request({
+            url: '/eoa/chat_send_message/',
+            method: 'post',
+            data: 'sent_message=' + chat_message + '&update_now=true',
+            onSuccess: function(res){
+                $('chat_text').value = ''
+            }
+        }).send();
+    });
 });
 
 

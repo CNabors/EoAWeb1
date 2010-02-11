@@ -10,7 +10,7 @@ ADMINS = (
 MANAGERS = ADMINS
 
 DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = '/home/web/dev/EoAWeb1/eoaweb/eoaweb'             # Or path to database file if using sqlite3.
+DATABASE_NAME = '/home/erik/Code/EoAWeb1/eoaweb/eoaweb'             # Or path to database file if using sqlite3.
 DATABASE_USER = ''             # Not used with sqlite3.
 DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
@@ -18,7 +18,7 @@ DATABASE_PORT = ''             # Set to empty string for default. Not used with 
 
 """Set up paths"""
 import os
-EOA_PATH = '/home/web/dev/EoAWeb1'
+EOA_PATH = '/home/erik/Code/EoAWeb1'
 ROOT_PATH = os.path.join(EOA_PATH, 'eoaweb')
 
 #Set Cookie age

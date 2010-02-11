@@ -49,6 +49,8 @@ window.addEvent('domready', function(){
                 onSuccess: function(res){
                     //Update the login wrapper to let them know they've logged in
                     //  this should just call a function to load a new page here
+                    var register_uname =  $('register_username').value
+                    var register_pw =  $('register_password').value
                     $('register_wrapper').innerHTML = "Account created! " + res +
                                 "<br />" + "Log in above"
                     $('register_wrapper').highlight('#22aa22');
@@ -57,8 +59,8 @@ window.addEvent('domready', function(){
                     //This should probably be handled better ><
                     var login_register_req = new Request({
                         url:'/eoa/account_login/',
-                        data: 'username=' + $('register_username').value + 
-                        '&password=' + $('register_password').value,
+                        data: 'username=' + register_uname + 
+                            '&password=' + register_pw,
                         method:'post',
                         onSuccess: function(res){window.location='/eoa/index/';}
                     }).send();

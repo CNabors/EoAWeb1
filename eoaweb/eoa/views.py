@@ -92,9 +92,25 @@ def heartbeat(request):
 
     characters = Character.objects.all()
 
-    res = "var char_array = [];"
+    #Set the current time
+    now = datetime.datetime.now()
 
+    #Subtract the delay of the request made to this function
+    time_test = now - datetime.timedelta(minutes=2)
+    
+    messages = ServerLog.objects.filter(message_time__gte=time_test)
+
+    #Create a list of active characters
+    active_characters = []
+
+    #Get only active characters - do this better...
     for i in characters:
+        if i.last_update > time_test:
+            active_characters.append(i)
+
+    res = "var char_array = [];\n"
+
+    for i in active_characters:
         if i.name != request.user.username:
             #Don't count characters attached to the logged in user
             res += "char_array.push(['" + i.name + "', '" + str(i.pos_x) +\
@@ -131,6 +147,8 @@ def move(request):
     elif dir == 'left':
         char.pos_x -= move_amount
 
+    char.connected = True
+
     #Save the character position
     char.save()
    
@@ -143,6 +161,56 @@ def move(request):
         res = "x:%s" % (char.pos_x)
 
     return HttpResponse(res)
+
+"""-----------------
+Chat related
+--------------------"""
+def chat_heartbeat(request):
+    """Grabs the last message from the server"""
+
+    #Set the current time
+    now = datetime.datetime.now()
+
+    #Subtract the delay of the request made to this function
+    time_test = now - datetime.timedelta(seconds=.5)
+    
+    #Get all the messages that haven't been sent
+    messages = ServerLog.objects.filter(message_time__gte=time_test)
+
+    #Build response string
+    res = "var chat_messages = ''"
+
+    if len(messages) > 0:
+        res = "var chat_messages = new Array();\n"
+
+        for i in messages:
+            cur_character = Character.objects.get(account=i.author)
+            cur_character_color = cur_character.color
+            #Loop through all returned messages
+            res += "chat_messages.push(['" + i.author.username + "', '" + \
+                                        i.message + "', '" + \
+                                        cur_character_color + "']);\n"
+
+    res += "//%s" % (time_test)
+
+    return HttpResponse(res)
+
+def chat_send_message(request):
+    """Updates the ServerLog"""
+    
+    #Get the message sent
+    sent_message = cgi.escape(request.POST['sent_message'])
+
+    #Create a new ServerLog object
+    new_message = ServerLog(author=request.user, message=sent_message)
+    new_message.save()
+
+    #setup a respone
+    res = 'Success'
+
+    return HttpResponse(res)
+    
+
 '''----------------------
 AUTH FUNCTIONS
 -------------------------'''

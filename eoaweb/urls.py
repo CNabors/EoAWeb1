@@ -33,7 +33,7 @@ urlpatterns = patterns('',
     ###    Chat Functions    
     ###=======================================================================
     (r'^chat_heartbeat/', 'eoa.views.chat_heartbeat'),
-    (r'^chat_send_stuff/', 'eoa.views.chat_heartbeat'),
+    (r'^chat_send_message/', 'eoa.views.chat_send_message'),
 
     ###=======================================================================
     ###    Game Functions    

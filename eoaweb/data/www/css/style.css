@@ -62,3 +62,38 @@ body, html {
     #login_wrapper {
         margin:20px 0 0 0;
     }
+     
+    /*---------------------------------
+     * Chat Area
+     * --------------------------------*/
+    #chat_container {
+        border:1px solid #232323;
+        font-size:.9em;
+        height:350px;
+        position:absolute;
+        right:10px;
+        top:10px;
+        width:350px;
+    }
+        #chat_incoming {
+            height:325px;
+            left:0px;
+            position:relative;
+            overflow:scroll;
+            top:0px;
+        }
+        #chat_outgoing {
+            border-top:1px solid #343434;
+            bottom:0px;
+            height:25px;
+            position:absolute;
+            width:100%;
+        }
+        #chat_text {
+            width:250px;
+        }
+
+        /*Chat box (received messages)*/
+        .chat_author {
+            font-weight:bold;
+        }
